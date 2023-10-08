@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { User } from '../models/user';
+import { User } from '../_models/user';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  baseUrl: string = 'http://localhost:5000/api/';
+  baseUrl: string = environment.apiUrl;
   // behaviorSubject will emit only latest value to subscribers
   private currentUserSource = new BehaviorSubject<User | null>(null);
 
