@@ -36,6 +36,16 @@ namespace API.Controllers
 
             // return Ok(usersToReturn);
 
+            // get username from jwt token 
+            var currentUser = await _userRepository.GetUserByUsernameAsync(User.GetUserName());
+            userParams.CurrentUsername = currentUser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                // if current user is man, only return woman
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+
             var users = await _userRepository.GetMembersAsync(userParams);
 
             Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
