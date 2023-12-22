@@ -46,6 +46,14 @@ namespace API.Data
             // filter by age
             query = query.Where(user => user.DateOfBirth >= minDob && user.DateOfBirth <= maxDob);
 
+            // order by
+            query = userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(u => u.Created),
+                // default
+                _ => query.OrderByDescending(u => u.LastActive)
+            };
+
             return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
         }
 
