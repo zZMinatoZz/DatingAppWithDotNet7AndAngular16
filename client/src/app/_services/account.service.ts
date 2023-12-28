@@ -15,7 +15,7 @@ export class AccountService {
   // we subscribe through observable instead of subject because avoid can use next() of subject to emit data
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(model: any) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
@@ -23,7 +23,6 @@ export class AccountService {
         const user = response;
         if (user) {
           this.setCurrentUser(user);
-          console.log('pipe doing first!');
         }
         return user;
       })
