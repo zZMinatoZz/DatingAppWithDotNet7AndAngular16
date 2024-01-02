@@ -44,11 +44,11 @@ namespace API.Data
             query = messageParams.Container switch
             {
                 // messages that user received
-                "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username),
+                "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false),
                 // messages that user sent
-                "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username),
+                "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username && u.SenderDeleted == false),
                 // default: messages that user received and hasn't read yet
-                _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null)
+                _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false && u.DateRead == null)
             };
 
             var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
@@ -62,8 +62,8 @@ namespace API.Data
             .Include(m => m.Sender).ThenInclude(u => u.Photos)
             .Include(m => m.Recipient).ThenInclude(u => u.Photos)
             .Where(
-                m => m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
-                m.SenderUsername == currentUsername && m.RecipientUsername == recipientUsername
+                m => m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername && m.RecipientDeleted == false ||
+                m.SenderUsername == currentUsername && m.RecipientUsername == recipientUsername && m.SenderDeleted == false
             ).OrderBy(m => m.MessageSent).ToListAsync();
 
             var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUsername);

@@ -43,4 +43,12 @@ export class MessagesComponent implements OnInit {
       this.loadMessages();
     }
   }
+
+  deleteMessage(id: number) {
+    this.messageService.deleteMessage(id).subscribe(
+      {
+        next: () => this.messages?.splice(this.messages.findIndex(m => m.id === id), 1)
+      }
+    )
+  }
 }
