@@ -64,7 +64,7 @@ namespace API.Data
             .Where(
                 m => m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
                 m.SenderUsername == currentUsername && m.RecipientUsername == recipientUsername
-            ).OrderByDescending(m => m.MessageSent).ToListAsync();
+            ).OrderBy(m => m.MessageSent).ToListAsync();
 
             var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUsername);
             // set time read for all unread message when user load message thread
