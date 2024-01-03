@@ -26,7 +26,7 @@ namespace API.Controllers
             var users = await _userManager.Users.OrderBy(u => u.UserName).Select(u => new
             {
                 u.Id,
-                Username = u.UserName,
+                UserName = u.UserName,
                 Roles = u.UserRoles.Select(r => r.Role.Name).ToList()
             }).ToListAsync();
 
