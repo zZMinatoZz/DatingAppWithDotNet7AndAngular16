@@ -1,10 +1,12 @@
 using System.Text;
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.interfaces;
 using API.Middleware;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -47,11 +49,15 @@ app.MapControllers();
 // create scope to access all services we have above
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
-try {
+try
+{
     var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(context);
-} catch(Exception ex) {
+    await Seed.SeedUsers(userManager);
+}
+catch (Exception ex)
+{
     var logger = services.GetService<ILogger<Program>>();
     logger.LogError(ex, "An error occurred during migration");
 }
