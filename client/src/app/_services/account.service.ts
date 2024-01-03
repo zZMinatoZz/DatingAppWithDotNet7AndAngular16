@@ -41,6 +41,11 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = [];
+    // "role": contains all roles of user that when token was being decoded
+    const roles = this.getDecodedToken(user.token).role;
+    // handle when token return one role or an array of roles
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -48,5 +53,10 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+
+  getDecodedToken(token: string) {
+    // get second part o token (info part), using atob() to convert string base64 into bytes
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
