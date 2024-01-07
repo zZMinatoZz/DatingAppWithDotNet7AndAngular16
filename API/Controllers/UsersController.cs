@@ -38,13 +38,13 @@ namespace API.Controllers
             // return Ok(usersToReturn);
 
             // get username from jwt token 
-            var currentUser = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUserName());
-            userParams.CurrentUsername = currentUser.UserName;
+            var gender = await _uow.UserRepository.GetUserGender(User.GetUserName());
+            userParams.CurrentUsername = User.GetUserName();
 
             if (string.IsNullOrEmpty(userParams.Gender))
             {
                 // if current user is man, only return woman
-                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+                userParams.Gender = gender == "male" ? "female" : "male";
             }
 
             var users = await _uow.UserRepository.GetMembersAsync(userParams);
