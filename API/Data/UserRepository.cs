@@ -67,15 +67,15 @@ namespace API.Data
             return await _context.Users.Include(p => p.Photos).SingleOrDefaultAsync(user => user.UserName == username);
         }
 
+        public async Task<string> GetUserGender(string username)
+        {
+            return await _context.Users.Where(u => u.UserName == username).Select(u => u.Gender).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
         {
             // include: to get data relation
             return await _context.Users.Include(p => p.Photos).ToListAsync();
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
         }
 
         public void Update(AppUser user)
