@@ -14,6 +14,7 @@ namespace API.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Connection> Connections { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,9 @@ namespace API.Data
 
             // 1 user can send many messages
             modelBuilder.Entity<Message>().HasOne(u => u.Sender).WithMany(m => m.MessagesSent).OnDelete(DeleteBehavior.Restrict);
+
+            // apply for all queries that targeting Photo entity
+            modelBuilder.Entity<Photo>().HasQueryFilter(p => p.IsApproved == true);
         }
 
     }
