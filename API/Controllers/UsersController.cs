@@ -60,7 +60,9 @@ namespace API.Controllers
             // var user = await _uow.UserRepository.GetUserByUsernameAsync(username);
             // var userToReturn = _mapper.Map<MemberDto>(user);
             // return Ok(userToReturn);
-            return await _uow.UserRepository.GetMemberAsync(username);
+            var currentUsername = User.GetUserName();
+
+            return await _uow.UserRepository.GetMemberAsync(username, isCurrentUser: currentUsername == username);
         }
 
         [HttpPut]
@@ -89,7 +91,7 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
 
-            if (user.Photos.Count == 0) photo.IsMain = true;
+            // if (user.Photos.Count == 0) photo.IsMain = true;
 
             user.Photos.Add(photo);
 
@@ -130,7 +132,7 @@ namespace API.Controllers
         {
             var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUserName());
 
-            var photoToDelete = user.Photos.FirstOrDefault(p => p.Id == photoId);
+            var photoToDelete = await _uow.PhotoRepository.GetPhotoById(photoId);
 
             if (photoToDelete == null) return NotFound();
 

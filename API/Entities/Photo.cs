@@ -13,6 +13,7 @@ namespace API.Entities
         public string Url { get; set; }
         public bool IsMain { get; set; }
         public string PublicId { get; set; }
+        public bool IsApproved { get; set; }
 
         // adding two props to define relation ship with AppUser, and make AppUserId is not null instead of nullable
         public int AppUserId { get; set; }
